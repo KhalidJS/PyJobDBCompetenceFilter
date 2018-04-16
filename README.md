@@ -1,2 +1,2 @@
-# Py-DB-Data-Filter
+# PyJobDBCompetenceFilter
 A data filtering app
