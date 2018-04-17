@@ -1,17 +1,11 @@
-import mysql.connector
-from Config import *
+import re
+import Competences
 
 if __name__ == '__main__':
-    try:
-        cnx = mysql.connector.connect(option_files=Config.Option_File.value, option_groups='CloudDB')
-        cur = cnx.cursor()
-        print('')
-        print('Connection established')
-        print('')
-        with open(Config.SQL_Select.value, 'r') as file:
-            for line in file:
-                cur.execute(line)
-                for reg_id,name in cur:
-                    print('ID {0}   {1} '.format(reg_id,name))
-    except mysql.connector.ProgrammingError as e:
-            print('Something went wrong', e.args)
+    if Competences.Competences.Title1 is Competences.Competences.Title1:
+        print('true')
+    file = open('JobTitle.txt')
+    JobTitle = file.read()
+    for com in Competences.Competences:
+        if re.search(com.value, JobTitle, re.M):
+            print('Match on: %s' % com.value)
