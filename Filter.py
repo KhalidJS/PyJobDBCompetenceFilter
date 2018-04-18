@@ -1,7 +1,7 @@
 import mysql.connector
 from Config import *
 import time
-import re
+import regex
 import sys
 
 
@@ -28,7 +28,8 @@ class Filter:
                             for kompetencelabel, t in cur1:
                                 antalkompetencer = antalkompetencer + 1
                                 # print("%s %s" % (kompetencelabel,t))
-                                if re.search('['+kompetencelabel + ']', t, re.IGNORECASE):
+                                match_obj = regex.search('('+kompetencelabel+'){1}', t, regex.IGNORECASE | regex.FULLCASE)
+                                if match_obj:
                                     print("Match on: %s : %s" % (kompetencelabel, t))
                                 else:
                                     pass
