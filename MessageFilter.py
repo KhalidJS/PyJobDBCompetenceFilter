@@ -58,3 +58,21 @@ class MessageFilter:
             print('Something went wrong', e.args)
         return self.annoncebodies
 
+    def filter(self):
+        try:
+            cnx = mysql.connector.connect(option_files=Config.Option_File.value, option_groups='CloudDB')
+            cur = cnx.cursor()
+            with open(Config.SQL_Select_Annonce_Kompetence.value, 'r') as k:
+                 for line_in_k in k:
+                     cur.execute(line_in_k)
+                     for kom_id,ann_id,preflabel,ann_body in cur:
+                         #body = regex.sub('\s+', ' ', ann_body[0], flags=regex.UNICODE)
+                         pattern = regex.compile(r'\s+')
+                         body = regex.sub(pattern,' ',ann_body)
+                         #print(body)
+                         #print('-')
+                         match = regex.search('(Følger){1}',body,regex.IGNORECASE)
+                         if match:
+                             print("Match",body)
+        except mysql.connector.ProgrammingError as e:
+            print('Something went wrong', e.args)
