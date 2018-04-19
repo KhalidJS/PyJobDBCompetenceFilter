@@ -5,8 +5,9 @@ import MessageFilter
 
 if __name__ == '__main__':
     filter = MessageFilter.MessageFilter()
-    for com in filter.GetCompetences():
-        for ann in filter.GetJobAnnonceBodies():
-            m = regex.search('('+com+'){0}', ann, regex.IGNORECASE)
+    for k in filter.GetJobAnnonceBodies():
+        m = regex.search('(C#){1}',k,regex.IGNORECASE)
         if m:
-            print("Match %s" % m.group())
+           print("-------------------------")
+           print("Match %s" % k)
+
