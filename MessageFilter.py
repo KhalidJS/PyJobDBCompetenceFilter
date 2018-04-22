@@ -70,6 +70,9 @@ class MessageFilter:
                          #body = regex.sub('\s+', ' ', ann_body[0], flags=regex.UNICODE)
                          pattern = regex.compile(r'\s+')
                          body = regex.sub(pattern,' ',ann_body)
+                         #rowcount - cur,rowcount
+                         #desc = cur.description
+                         #print(desc[0][0],desc[1][0],desc[2][0],desc[3][0])
                          #print(preflabel)
                          #print(body)
                          #print('-')
@@ -79,6 +82,7 @@ class MessageFilter:
                  elapsed = time.time() - startTimer
                  duration = time.strftime('%H:%M:%S',time.gmtime(elapsed))
                  print(duration)
-                # Tager 15 minutter at gennemløbe 100000
+                # Takes 15 minutes for searching 100000 rows
+                # Takes 3 hours 24 minutes 10 seconds - so far
         except mysql.connector.ProgrammingError as e:
             print('Something went wrong', e.args)
