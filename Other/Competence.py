@@ -1,7 +1,7 @@
 import enum
 
 
-class Competences(enum.Enum):
+class Competence(enum.Enum):
     Title1 = 'Junior'
     Title2 = 'junior'
     Title3 = 'Software'

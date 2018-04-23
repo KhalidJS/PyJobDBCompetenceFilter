@@ -1,8 +1,7 @@
 import mysql.connector
-from Config import *
+from Configuration.AppSettings import *
 import time
 import regex
-import sys
 
 
 class MessageFilter:
