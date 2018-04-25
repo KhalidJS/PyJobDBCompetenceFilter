@@ -1,7 +1,9 @@
 import mysql.connector
+from pip._vendor.distlib.util import Configurator
 from Configuration.AppSettings import *
 import time
 import regex
+import Configuration
 
 
 class MessageFilter:
@@ -10,11 +12,11 @@ class MessageFilter:
         self.annoncebodies = []
     def GetCompetences(self):
         try:
-            cnx = mysql.connector.connect(option_files=Config.Option_File.value, option_groups='CloudDB')
+            cnx = mysql.connector.connect(option_files=Configuration.Option_File.value, option_groups='CloudDB')
             cur = cnx.cursor()
             antalkompetencer = 0
             antalannoncer = 0
-            with open(Config.SQL_Select_kompetence.value, 'r') as k:
+            with open(Configuration.SQL_Select_kompetence.value, 'r') as k:
                 start_time = time.time()
                 for line_in_k in k:
                     cur.execute(line_in_k)
@@ -43,9 +45,9 @@ class MessageFilter:
         return self.competences
     def GetJobAnnonceBodies(self):
         try:
-            cnx = mysql.connector.connect(option_files=Config.Option_File.value, option_groups='CloudDB')
+            cnx = mysql.connector.connect(option_files=Configuration.Option_File.value, option_groups='CloudDB')
             cur = cnx.cursor()
-            with open(Config.SQL_Select_Annonce.value, 'r') as a:
+            with open(Configuration.SQL_Select_Annonce.value, 'r') as a:
                 for line_in_a in a:
                     cur.execute(line_in_a)
                     for annonce in cur:
@@ -59,9 +61,9 @@ class MessageFilter:
 
     def filter(self):
         try:
-            cnx = mysql.connector.connect(option_files=Config.Option_File.value, option_groups='CloudDB')
+            cnx = mysql.connector.connect(option_files=Configuration.Option_File.value, option_groups='CloudDB')
             cur = cnx.cursor()
-            with open(Config.SQL_Select_Annonce_Kompetence.value, 'r') as k:
+            with open(Configuration.SQL_Select_Annonce_Kompetence.value, 'r') as k:
                  for line_in_k in k:
                      cur.execute(line_in_k)
                      startTimer = time.time()
