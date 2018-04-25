@@ -14,11 +14,11 @@ class MessageFilter:
         removeUnwantedData = soup.contents[0]
         messagebody = regex.sub(self.removeSpaces, ' ', removeUnwantedData)
         # match = regex.search(r'(' + competencetitle + '){1}',messagebody,regex.IGNORECASE | regex.MULTILINE)
-        match = regex.search(r'(Bioanalytiker){1}', messagebody, regex.IGNORECASE)
+        match = regex.search(r'\b(Specific Text)\b{1}', messagebody, regex.IGNORECASE)
         if match:
             self.advertID = advertID
             self.competenceID = competenceID
-            print('MAtch on:' + messagebody)
+            print('MAtch on:' + str(advertID))
             return True
         else:
             # print('No Match')
