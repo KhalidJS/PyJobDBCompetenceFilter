@@ -2,9 +2,11 @@ from mysql.connector import connect,ProgrammingError
 import time
 from Filter import ContentFilter,MessageFilter
 from Channel import MessageEndPoint
+import datetime
 
 
 class MessageChannel:
+
     def __init__(self):
         # variables
         self.content = ContentFilter.ContentFilter()
@@ -15,14 +17,17 @@ class MessageChannel:
         # connecting to Mysql server
         try:
             connection = connect(option_files=option_file, option_groups=option_groups)
+            print('Connecting to hostname: %s  with port: %s' % (connection.server_host,connection.server_port))
+            print('successfully connected to hostname: %s\n' % connection.server_host)
+            print('Fetch for data and filter started: {%s}\n' % datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
             cursor = connection.cursor()
-            print('successfully connected')
             cursor.execute(self.content.getSpecifiedContent())
             startTimer = time.time()
-            for kom_id, ann_id, preflabel, ann_body in cursor:
-                if self.messagefilter.checkMatchForJobAdvertAndCompetence(ann_id,kom_id,ann_body, preflabel):
-                   self.messageEndPoint.storeIDs(self.messagefilter.advertID,self.messagefilter.competenceID)
-                   self.insertDataToDB(self.messageEndPoint.advertID,self.messageEndPoint.competenceID)
+            for comptence_ID,advert_ID,competence,advert_blobtext,advert_title,advert_url in cursor:
+                if self.messagefilter.checkMatchForJobAdvertAndCompetence(competenceTitle=competence,advertBody=advert_blobtext):
+                   self.messagefilter.setAdvertIDAndCompetenceID(advertID=advert_ID,competenceID=comptence_ID)
+                   self.messagefilter.setAdvertTitleAndURL(advertTitle=advert_title,advertURL=advert_url)
+                   self.messageEndPoint.storeIDs(self.messagefilter.getadvertID(),self.messagefilter.getcompetenceID())
             elapsed = time.time() - startTimer
             duration = time.strftime('%H:%M:%S', time.gmtime(elapsed))
             print('Took: %s' % duration)
@@ -32,10 +37,19 @@ class MessageChannel:
             cursor.close()
             connection.close()
 
+    def insertDataToDB(self,option_files,option_groups,messageEndPoint):
+        advertID = messageEndPoint.getadvertID()
+        competenceID = messageEndPoint.getcompetenceID()
+        try:
+            connection = connect(option_files=option_files, option_groups=option_groups)
+            cursor = connection.cursor()
+            print('{%s}: Inserting data into database' % datetime.datetime.now().strftime('%H:%M:%S'))
+        except ProgrammingError as e:
+                print('An error has occurred',e.args)
+        finally:
+                 cursor.close()
+                 connection.close()
 
 
-    def insertDataToDB(self,AdvertID,CompetenceID):
-        # later
-        file = open('C:/Dropbox/Test/test.txt','a')
-        file.write(str(AdvertID) + ' ' + str(CompetenceID) + '\n')
-        file.close()
+    def getMessageEndPoint(self):
+        return self.messageEndPoint

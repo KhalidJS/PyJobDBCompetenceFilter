@@ -31,8 +31,9 @@ class Application:
             connection.close()
 
     def run(self):
+        print('App Running.........')
         FetchData = MessageChannel.MessageChannel()
         FetchData.fetchAndFilterDataFromDB(self.option_file, self.option_groups)
 
-        InsertData = MessageChannel.MessageChannel()
-        InsertData.InsertDataToDB() # MessageEndpoint object
+        #InsertData = MessageChannel.MessageChannel()
+        #InsertData.InsertDataToDB(self.option_file,self.option_groups,FetchData.getMessageEndPoint()) # MessageEndpoint object
