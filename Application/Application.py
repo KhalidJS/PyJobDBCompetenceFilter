@@ -1,8 +1,6 @@
-from regex import sub, compile
 from mysql.connector import connect, ProgrammingError
-from Configuration.AppSettings import AppSettings
+from AppConfiguration.Configuration.AppSettings import AppSettings
 from Filter import ContentFilter
-from time import time
 from Channel import MessageChannel
 
 
@@ -33,5 +31,8 @@ class Application:
             connection.close()
 
     def run(self):
-        DBCall = MessageChannel.MessageChannel()
-        DBCall.fetchAndFilterDataFromDB(self.option_file, self.option_groups)
+        FetchData = MessageChannel.MessageChannel()
+        FetchData.fetchAndFilterDataFromDB(self.option_file, self.option_groups)
+
+        InsertData = MessageChannel.MessageChannel()
+        InsertData.InsertDataToDB() # MessageEndpoint object

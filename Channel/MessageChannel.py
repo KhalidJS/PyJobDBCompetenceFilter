@@ -3,6 +3,7 @@ import time
 from Filter import ContentFilter,MessageFilter
 from Channel import MessageEndPoint
 
+
 class MessageChannel:
     def __init__(self):
         # variables
@@ -21,6 +22,7 @@ class MessageChannel:
             for kom_id, ann_id, preflabel, ann_body in cursor:
                 if self.messagefilter.checkMatchForJobAdvertAndCompetence(ann_id,kom_id,ann_body, preflabel):
                    self.messageEndPoint.storeIDs(self.messagefilter.advertID,self.messagefilter.competenceID)
+                   self.insertDataToDB(self.messageEndPoint.advertID,self.messageEndPoint.competenceID)
             elapsed = time.time() - startTimer
             duration = time.strftime('%H:%M:%S', time.gmtime(elapsed))
             print('Took: %s' % duration)
@@ -32,6 +34,8 @@ class MessageChannel:
 
 
 
-    def insertDataToDB(self,):
+    def insertDataToDB(self,AdvertID,CompetenceID):
         # later
-        pass
+        file = open('C:/Dropbox/Test/test.txt','a')
+        file.write(str(AdvertID) + ' ' + str(CompetenceID) + '\n')
+        file.close()
