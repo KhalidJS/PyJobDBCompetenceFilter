@@ -28,28 +28,37 @@ class MessageChannel:
                    self.messagefilter.setAdvertIDAndCompetenceID(advertID=advert_ID,competenceID=comptence_ID)
                    self.messagefilter.setAdvertTitleAndURL(advertTitle=advert_title,advertURL=advert_url)
                    self.messageEndPoint.storeIDs(self.messagefilter.getadvertID(),self.messagefilter.getcompetenceID())
+                   file = open('T.txt','a')
+                   file.write(str(self.messageEndPoint.getadvertID()) + ' : ' + str(self.messageEndPoint.getcompetenceID()) + '\n')
             elapsed = time.time() - startTimer
             duration = time.strftime('%H:%M:%S', time.gmtime(elapsed))
             print('Took: %s' % duration)
         except ProgrammingError as e:
             print(e.args)
         finally:
-            cursor.close()
-            connection.close()
+            pass
+            #cursor.close()
+            #connection.close()
 
     def insertDataToDB(self,option_files,option_groups,messageEndPoint):
         advertID = messageEndPoint.getadvertID()
         competenceID = messageEndPoint.getcompetenceID()
+        file = open('t.txt','w')
+        file.write(str(advertID) + str(competenceID))
+        '''''''''
         try:
             connection = connect(option_files=option_files, option_groups=option_groups)
             cursor = connection.cursor()
             print('{%s}: Inserting data into database' % datetime.datetime.now().strftime('%H:%M:%S'))
+            cursor.execute(self.content.getspecifiedContentFromDBToInsert() + '(%s,%s)' % (advertID,competenceID))
+            connection.commit()
         except ProgrammingError as e:
                 print('An error has occurred',e.args)
         finally:
-                 cursor.close()
-                 connection.close()
+                cursor.close()
+                connection.close()
 
 
     def getMessageEndPoint(self):
         return self.messageEndPoint
+'''''

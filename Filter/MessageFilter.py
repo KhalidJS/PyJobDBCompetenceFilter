@@ -20,7 +20,7 @@ class MessageFilter:
         match = regex.search(r'(' + competenceTitle + '){1}',messagebody,regex.IGNORECASE | regex.MULTILINE)
         #match = regex.search(r'leder{1}', messagebody, regex.IGNORECASE)
         if match:
-            print("{%s} Competence: '%s' was found at: %s: %s" % (datetime.datetime.now().strftime('%H:%M:%S'),competenceTitle,self.advert_title,self.URL))
+            print("{%s} Match found on competence: '%s' at advert: '%s': %s" % (datetime.datetime.now().strftime('%H:%M:%S'),competenceTitle,self.advert_title,self.URL))
             return True
         else:
             # print('No Match')

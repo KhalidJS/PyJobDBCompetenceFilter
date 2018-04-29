@@ -35,5 +35,6 @@ class Application:
         FetchData = MessageChannel.MessageChannel()
         FetchData.fetchAndFilterDataFromDB(self.option_file, self.option_groups)
 
+        # this would start after fetchdata object
         #InsertData = MessageChannel.MessageChannel()
         #InsertData.InsertDataToDB(self.option_file,self.option_groups,FetchData.getMessageEndPoint()) # MessageEndpoint object
