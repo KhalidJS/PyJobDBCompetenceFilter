@@ -17,8 +17,8 @@ class MessageFilter:
         soup = BeautifulSoup(convertFromBlobToString, 'html.parser')
         removeUnwantedData = soup.contents[0]
         messagebody = regex.sub(self.removeSpaces, ' ', removeUnwantedData)
-        match = regex.search(r'(' + competenceTitle + '){1}',messagebody,regex.IGNORECASE | regex.MULTILINE)
-        #match = regex.search(r'leder{1}', messagebody, regex.IGNORECASE)
+        match = regex.search(r'\s' + competenceTitle + '[\s|\,|\-]{1}',messagebody,regex.IGNORECASE | regex.MULTILINE)
+        #match = regex.search(r'\sR[\s|\,|\-]{1}', messagebody)
         if match:
             print("{%s} Match found on competence: '%s' at advert: '%s': %s" % (datetime.datetime.now().strftime('%H:%M:%S'),competenceTitle,self.advert_title,self.URL))
             return True
