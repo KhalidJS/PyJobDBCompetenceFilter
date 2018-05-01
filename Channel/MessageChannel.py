@@ -1,6 +1,6 @@
 import datetime
 import time
-
+import os
 from mysql.connector import connect, ProgrammingError,Error
 
 from Channel import MessageEndPoint
@@ -18,7 +18,9 @@ class MessageChannel:
     def fetchAndFilterDataFromDB(self, option_file, option_groups):
         # connecting to Mysql server
         try:
-            connection = connect(option_files=option_file, option_groups=option_groups)
+            connection = connect(user=os.environ['MYSQL_USER'], password=os.environ['MYSQL_PASSWORD'],
+                                 host=os.environ['MYSQL_HOST'],
+                                 database=os.environ['MYSQL_DATABASE'], port=os.environ['MYSQL_PORT'])
             print('Connecting to hostname: %s  with port: %s' % (connection.server_host, connection.server_port))
             print('successfully connected to hostname: %s\n' % connection.server_host)
             print('Fetch for data and filter started: {%s}\n' % datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
@@ -32,8 +34,7 @@ class MessageChannel:
                     self.messagefilter.setAdvertTitleAndURL(advertTitle=advert_title, advertURL=advert_url)
                     self.messageEndPoint.storeIDs(self.messagefilter.getadvertID(),
                                                   self.messagefilter.getcompetenceID())
-                    self.insertDataToDB(option_file=option_file, option_groups=option_groups,
-                                        messageEndPoint=self.messageEndPoint)
+                    self.insertDataToDB(messageEndPoint=self.messageEndPoint)
             elapsed = time.time() - startTimer
             duration = time.strftime('%H:%M:%S', time.gmtime(elapsed))
             print('Took: %s' % duration)
@@ -44,14 +45,16 @@ class MessageChannel:
             cursor.close()
             connection.close()
 
-    def insertDataToDB(self, option_file, option_groups, messageEndPoint):
+    def insertDataToDB(self, messageEndPoint):
         advertID = messageEndPoint.getadvertID()
         competenceID = messageEndPoint.getcompetenceID()
         # file = open('t.txt','w')
         # file.write(str(advertID) + str(competenceID))
         try:
             # connection = connect(option_files=option_files, option_groups=option_groups)
-            connection = connect(option_files=option_file, option_groups=option_groups)
+            connection = connect(user=os.environ['MYSQL_USER'], password=os.environ['MYSQL_PASSWORD'],
+                                 host=os.environ['MYSQL_HOST'],
+                                 database=os.environ['MYSQL_DATABASE'], port=os.environ['MYSQL_PORT'])
             cursor = connection.cursor()
             print('{%s}: Inserting data into database' % datetime.datetime.now().strftime('%H:%M:%S'))
             cursor.execute(self.content.getspecifiedContentFromDBToInsert() + '(%s,%s)' % (advertID, competenceID))
