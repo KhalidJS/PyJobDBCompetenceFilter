@@ -1,6 +1,7 @@
 import datetime
 import time
 import os
+import sys
 from mysql.connector import connect, ProgrammingError,Error
 
 from Channel import MessageEndPoint
@@ -35,6 +36,7 @@ class MessageChannel:
                     self.messageEndPoint.storeIDs(self.messagefilter.getadvertID(),
                                                   self.messagefilter.getcompetenceID())
                     self.insertDataToDB(messageEndPoint=self.messageEndPoint)
+                    sys.stdout.flush()
             elapsed = time.time() - startTimer
             duration = time.strftime('%H:%M:%S', time.gmtime(elapsed))
             print('Took: %s' % duration)
