@@ -1,1 +1,0 @@
-select prefferredLabel,title from kompetence,annonce
