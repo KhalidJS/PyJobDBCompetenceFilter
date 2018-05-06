@@ -27,11 +27,10 @@ class MessageChannel:
             cursor = connection.cursor()
             cursor.execute(self.content.getSpecifiedContent())
             startTimer = time.time()
-            for c_ID,label in cursor:
-                print('Now filtering on %d' % c_ID)
-                self.messagefilter.DBRegExp(label)
-                # fejl efter competence _id = 7251
-                # REASON - kompetencen med _id = 7252 fejler så den starter forfra fra Haskell,ERlang...
+            for competence_ID,competence in cursor:
+                #print('Now filtering on %d' % c_ID)
+                self.messagefilter.DBRegExp(competence_ID,competence)
+                # Det tager 21:55 minutter om at køre og matche kompetencen med searchable_body
                 # self.insertDataToDB(messageEndPoint=self.messageEndPoint)
                 sys.stdout.flush()
             elapsed = time.time() - startTimer
