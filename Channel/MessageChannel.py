@@ -30,8 +30,9 @@ class MessageChannel:
             for competence_ID,competence in cursor:
                 #print('Now filtering on %d' % c_ID)
                 self.messagefilter.DBRegExp(competence_ID,competence)
-                # Det tager 21:55 minutter om at køre og matche kompetencen med searchable_body
+                self.messageEndPoint.storeIDs(self.messagefilter.getadvertID(),self.messagefilter.getcompetenceID())
                 # self.insertDataToDB(messageEndPoint=self.messageEndPoint)
+                # Det tager 21:55 minutter om at køre og matche kompetencen med searchable_body
                 sys.stdout.flush()
             elapsed = time.time() - startTimer
             duration = time.strftime('%H:%M:%S', time.gmtime(elapsed))
