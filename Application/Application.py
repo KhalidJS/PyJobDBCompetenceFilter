@@ -12,12 +12,6 @@ class Application:
         self.option_groups = AppSettings.Option_groups.value
         self.content = ContentFilter.ContentFilter()
         self.messageFilter = ''
-        # Alternativ version
-        # self.hostname = ''
-        # self.user = ''
-        # self.password = ''
-        # self.database = ''
-        # cnx = mysql.connector.connect(user=user,hostname=hostname,password=password,database=database)
 
     def TestConnection(self):
         try:
@@ -34,7 +28,3 @@ class Application:
         print('App Running.........')
         FetchData = MessageChannel.MessageChannel()
         FetchData.fetchAndFilterDataFromDB(self.option_file, self.option_groups)
-
-        # this would start after fetchdata object
-        #InsertData = MessageChannel.MessageChannel()
-        #InsertData.InsertDataToDB(self.option_file,self.option_groups,FetchData.getMessageEndPoint()) # MessageEndpoint object

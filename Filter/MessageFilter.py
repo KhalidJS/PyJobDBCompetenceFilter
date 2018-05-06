@@ -1,7 +1,9 @@
 import regex
+import os
 from bs4 import BeautifulSoup
 import datetime
 import time
+from mysql.connector import connect, Error
 
 
 class MessageFilter:
@@ -12,19 +14,9 @@ class MessageFilter:
         self.URL = ''
         self.advert_title = ''
 
-    def checkMatchForJobAdvertAndCompetence(self,competenceTitle,advertBody):
+    def checkMatchForJobAdvertAndCompetence(self, competenceTitle, advertBody):
         convertFromBlobToString = str(advertBody)
-        soup = BeautifulSoup(convertFromBlobToString, 'html.parser')
-        removeUnwantedData = soup.contents[0]
-        messagebody = regex.sub(self.removeSpaces, ' ', removeUnwantedData)
-        match = regex.search(r'\s' + competenceTitle + '[\s|\,|\-]{1}',messagebody,regex.IGNORECASE | regex.MULTILINE)
-        #match = regex.search(r'\sR[\s|\,|\-]{1}', messagebody)
-        if match:
-            print("{%s} Match found on competence: '%s' at advert: '%s': %s" % (datetime.datetime.now().strftime('%H:%M:%S'),competenceTitle,self.advert_title,self.URL))
-            return True
-        else:
-            # print('No Match')
-            return False
+        self.DBRegExp(competenceTitle, advertBody)
 
     def getadvertID(self):
         return self.advertID
@@ -32,10 +24,31 @@ class MessageFilter:
     def getcompetenceID(self):
         return self.competenceID
 
-    def setAdvertTitleAndURL(self,advertTitle,advertURL):
+    def setAdvertTitleAndURL(self, advertTitle, advertURL):
         self.advert_title = advertTitle
         self.URL = advertURL
 
-    def setAdvertIDAndCompetenceID(self,advertID,competenceID):
+    def setAdvertIDAndCompetenceID(self, advertID, competenceID):
         self.advertID = advertID
         self.competenceID = competenceID
+
+    def DBRegExp(self, competence):
+        try:
+            # connection = connect(option_files=option_files, option_groups=option_groups)
+            connection = connect(user=os.environ['MYSQL_USER'], password=os.environ['MYSQL_PASSWORD'],
+                                 host=os.environ['MYSQL_HOST'],
+                                 database=os.environ['MYSQL_DATABASE'], port=os.environ['MYSQL_PORT'])
+            cursor = connection.cursor()
+            # print('{%s}: Inserting data into database' % datetime.datetime.now().strftime('%H:%M:%S'))
+            cursor.execute(
+                "SELECT _id,title,searchable_body from JobDB.annonce WHERE searchable_body REGEXP '%s';" % competence)
+            for id, title, body in cursor:
+                print('competence %s fount at %s' % (competence, title))
+        except Error as e:
+            # If there is any case of error - Rollback
+            print(e.args)
+            #connection.rollback()
+        finally:
+            cursor.close()
+            connection.close()
+

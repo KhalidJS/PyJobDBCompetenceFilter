@@ -3,7 +3,6 @@ import time
 import os
 import sys
 from mysql.connector import connect, ProgrammingError,Error
-
 from Channel import MessageEndPoint
 from Filter import ContentFilter, MessageFilter
 
@@ -28,22 +27,19 @@ class MessageChannel:
             cursor = connection.cursor()
             cursor.execute(self.content.getSpecifiedContent())
             startTimer = time.time()
-            for comptence_ID, advert_ID, competence, advert_blobtext, advert_title, advert_url in cursor:
-                if self.messagefilter.checkMatchForJobAdvertAndCompetence(competenceTitle=competence,
-                                                                          advertBody=advert_blobtext):
-                    self.messagefilter.setAdvertIDAndCompetenceID(advertID=advert_ID, competenceID=comptence_ID)
-                    self.messagefilter.setAdvertTitleAndURL(advertTitle=advert_title, advertURL=advert_url)
-                    self.messageEndPoint.storeIDs(self.messagefilter.getadvertID(),
-                                                  self.messagefilter.getcompetenceID())
-                    self.insertDataToDB(messageEndPoint=self.messageEndPoint)
-                    sys.stdout.flush()
+            for c_ID,label in cursor:
+                print('Now filtering on %d' % c_ID)
+                self.messagefilter.DBRegExp(label)
+                # fejl efter competence _id = 7251
+                # REASON - kompetencen med _id = 7252 fejler så den starter forfra fra Haskell,ERlang...
+                # self.insertDataToDB(messageEndPoint=self.messageEndPoint)
+                sys.stdout.flush()
             elapsed = time.time() - startTimer
             duration = time.strftime('%H:%M:%S', time.gmtime(elapsed))
             print('Took: %s' % duration)
         except ProgrammingError as e:
             print(e.args)
         finally:
-            pass
             cursor.close()
             connection.close()
 
