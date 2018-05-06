@@ -1,7 +1,7 @@
 class MessageEndPoint:
     def __init__(self):
-        self.advertID = 0
-        self.competenceID = 0
+        self.advertID = ''
+        self.competenceID = ''
 
     def storeIDs(self,advertID,competenceID):
         self.advertID = advertID

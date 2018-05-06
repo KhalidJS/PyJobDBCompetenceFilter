@@ -28,12 +28,9 @@ class MessageChannel:
             cursor.execute(self.content.getSpecifiedContent())
             startTimer = time.time()
             for competence_ID,competence in cursor:
-                #print('Now filtering on %d' % c_ID)
                 self.messagefilter.DBRegExp(competence_ID,competence)
-                self.messageEndPoint.storeIDs(self.messagefilter.getadvertID(),self.messagefilter.getcompetenceID())
-                # self.insertDataToDB(messageEndPoint=self.messageEndPoint)
                 # Det tager 21:55 minutter om at køre og matche kompetencen med searchable_body
-                sys.stdout.flush()
+            sys.stdout.flush()
             elapsed = time.time() - startTimer
             duration = time.strftime('%H:%M:%S', time.gmtime(elapsed))
             print('Took: %s' % duration)
@@ -42,28 +39,3 @@ class MessageChannel:
         finally:
             cursor.close()
             connection.close()
-
-    def insertDataToDB(self, messageEndPoint):
-        advertID = messageEndPoint.getadvertID()
-        competenceID = messageEndPoint.getcompetenceID()
-        # file = open('t.txt','w')
-        # file.write(str(advertID) + str(competenceID))
-        try:
-            # connection = connect(option_files=option_files, option_groups=option_groups)
-            connection = connect(user=os.environ['MYSQL_USER'], password=os.environ['MYSQL_PASSWORD'],
-                                 host=os.environ['MYSQL_HOST'],
-                                 database=os.environ['MYSQL_DATABASE'], port=os.environ['MYSQL_PORT'])
-            cursor = connection.cursor()
-            print('{%s}: Inserting data into database' % datetime.datetime.now().strftime('%H:%M:%S'))
-            cursor.execute(self.content.getspecifiedContentFromDBToInsert() + '(%s,%s)' % (advertID, competenceID))
-            connection.commit()
-        except Error as e:
-            # If there is any case of error - Rollback
-            print('Problem occured %s : ' % e.args)
-            connection.rollback()
-        finally:
-            cursor.close()
-            connection.close()
-
-    def getMessageEndPoint(self):
-        return self.messageEndPoint
