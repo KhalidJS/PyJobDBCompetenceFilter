@@ -1,8 +1,9 @@
 import SqlQueries.SqlScripts
 
+
 class ContentFilter:
     def __init__(self):
-        self.readSelectQueryFile = SqlQueries.SqlScripts.Sql.SQL_Select_annonce_kompetence.value
+        self.readSelectQueryFile = SqlQueries.SqlScripts.Sql.SQL_Select_kompetence.value
         self.readInsertQueryFile = SqlQueries.SqlScripts.Sql.SQL_Insert_annoncekompetence.value
 
     def getSpecifiedContent(self):

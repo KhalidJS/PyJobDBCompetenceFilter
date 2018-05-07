@@ -1,8 +1,10 @@
 from enum import Enum
+import os
+
 
 class AppSettings(Enum):
-    # Absolut paths
-    Option_File = 'C:/DropBox/sql/mysql.cnf'
-    Option_groups = 'CloudDB'
-    # define for alternativ handler
-    # hint: files are stored in relativ path
+    user = os.environ['MYSQL_USER']
+    password = os.environ['MYSQL_PASSWORD']
+    host = os.environ['MYSQL_HOST']
+    database = os.environ['MYSQL_DATABASE']
+    port = os.environ['MYSQL_PORT']

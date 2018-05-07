@@ -1,9 +1,6 @@
 import datetime
 import time
-import os
-import sys
-from mysql.connector import connect, ProgrammingError,Error
-from Channel import MessageEndPoint
+from mysql.connector import connect, ProgrammingError, Error
 from Filter import ContentFilter, MessageFilter
 
 
@@ -13,29 +10,27 @@ class MessageChannel:
         # variables
         self.content = ContentFilter.ContentFilter()
         self.messagefilter = MessageFilter.MessageFilter()
-        self.messageEndPoint = MessageEndPoint.MessageEndPoint()
 
-    def fetchAndFilterDataFromDB(self, option_file, option_groups):
+    def fetchAndFilterDataFromDB(self, user, password, host, database, port):
         # connecting to Mysql server
         try:
-            connection = connect(user=os.environ['MYSQL_USER'], password=os.environ['MYSQL_PASSWORD'],
-                                 host=os.environ['MYSQL_HOST'],
-                                 database=os.environ['MYSQL_DATABASE'], port=os.environ['MYSQL_PORT'])
+            connection = connect(user=user, password=password, host=host, database=database, port=port)
             print('Connecting to hostname: %s  with port: %s' % (connection.server_host, connection.server_port))
             print('successfully connected to hostname: %s\n' % connection.server_host)
             print('Fetch for data and filter started: {%s}\n' % datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
             cursor = connection.cursor()
             cursor.execute(self.content.getSpecifiedContent())
             startTimer = time.time()
-            for competence_ID,competence in cursor:
-                self.messagefilter.DBRegExp(competence_ID,competence)
-                # Det tager 21:55 minutter om at køre og matche kompetencen med searchable_body
-            sys.stdout.flush()
+            for competence_ID, competence in cursor:
+                self.messagefilter.DBRegExp(competence_ID, competence)
+                # tager ca. 41 minutter om at køre det hele igennem
             elapsed = time.time() - startTimer
             duration = time.strftime('%H:%M:%S', time.gmtime(elapsed))
             print('Took: %s' % duration)
-        except ProgrammingError as e:
+        except Error as e:
             print(e.args)
+        except ProgrammingError as p:
+            print(p.args)
         finally:
             cursor.close()
             connection.close()

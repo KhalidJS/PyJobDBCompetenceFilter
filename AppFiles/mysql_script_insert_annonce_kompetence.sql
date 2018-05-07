@@ -1,1 +1,1 @@
-insert into annonce_kompetence (annonce_id,kompetence_id) values 
+insert ignore into annonce_kompetence (annonce_id,kompetence_id) values
