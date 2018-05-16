@@ -21,9 +21,9 @@ class MessageChannel:
             cursor = connection.cursor()
             cursor.execute(self.content.getSpecifiedContent())
             startTimer = time.time()
-            for competence_ID, competence in cursor:
-                self.messagefilter.DBRegExp(competence_ID, competence)
-                # tager ca. 41 minutter om at køre det hele igennem
+            for competence_ID, competence, altLabels in cursor:
+                altlabel = altLabels.replace('/', '|')
+                self.messagefilter.DBRegExp(competence_ID, competence, altlabel)
             elapsed = time.time() - startTimer
             duration = time.strftime('%H:%M:%S', time.gmtime(elapsed))
             print('Took: %s' % duration)

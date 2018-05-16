@@ -14,7 +14,7 @@ class Application:
         self.port = AppSettings.port.value
 
     # Just for test purpose
-    def TestConnectionToDB(self):
+    def testConnectionToDB(self):
         try:
             connection = connect(user=self.user, password=self.password, database=self.database, host=self.host, port=self.port)
             cursor = connection.cursor()

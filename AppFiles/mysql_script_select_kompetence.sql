@@ -1,1 +1,1 @@
-select kompetence._id,kompetence.prefferredLabel from kompetence
+select kompetence._id,kompetence.prefferredLabel,kompetence.altLabels from kompetence

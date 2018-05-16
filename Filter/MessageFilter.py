@@ -15,14 +15,13 @@ class MessageFilter:
         self.database = AppConfiguration.Configuration.AppSettings.AppSettings.database.value
         self.port = AppConfiguration.Configuration.AppSettings.AppSettings.port.value
 
-    def DBRegExp(self, competence_id, competence):
+    def DBRegExp(self, competence_id, competence,altLabel):
         try:
             connection = connect(user=self.user, password=self.password,
                                  host=self.host,
                                  database=self.database, port=self.port)
             cursor = connection.cursor()
-            cursor.execute(
-                "SELECT _id,title,searchable_body,url from JobDB.annonce WHERE searchable_body REGEXP '%s';" % competence)
+            cursor.execute("SELECT _id,title,searchable_body,url from JobDB.annonce WHERE searchable_body REGEXP '%s|%s ';" % (competence, altLabel))
             self.messageEndpoint.setCompetenceID(competence_id)
             count = 0
             for _id, title, body, url in cursor:
