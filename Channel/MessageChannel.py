@@ -23,7 +23,8 @@ class MessageChannel:
             startTimer = time.time()
             for competence_ID, competence, altLabels in cursor:
                 altlabel = altLabels.replace('/', '|')
-                self.messagefilter.DBRegExp(competence_ID, competence, altlabel)
+                print(altlabel)
+                #self.messagefilter.DBRegExp(competence_ID, competence, altlabel)
             elapsed = time.time() - startTimer
             duration = time.strftime('%H:%M:%S', time.gmtime(elapsed))
             print('Took: %s' % duration)
