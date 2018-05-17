@@ -15,12 +15,12 @@ class MessageFilter:
         self.database = AppConfiguration.Configuration.AppSettings.AppSettings.database.value
         self.port = AppConfiguration.Configuration.AppSettings.AppSettings.port.value
 
-    def DBRegExp(self, competence_id, competence, altLabel):
+    def retrieveDataDB(self, competence_id, competence, altLabel):
         self.singlesearch(competence_id, competence)
         if altLabel:
-           labels = altLabel.split('/')
-           for label in labels:
-               self.singlesearch(competence_id, label)
+            labels = altLabel.split('/')
+            for label in labels:
+                self.singlesearch(competence_id, label)
 
     def insertDataToDB(self, messageEndPoint):
         competenceID = messageEndPoint.getcompetenceID()
@@ -48,7 +48,7 @@ class MessageFilter:
             cursor.close()
             connection.close()
 
-    def singlesearch(self, competence_id, searchstring):
+    def singleSearchDB(self, competence_id, searchstring):
         try:
             connection = connect(user=self.user, password=self.password,
                                  host=self.host,
@@ -69,7 +69,6 @@ class MessageFilter:
         except Error as e:
             # If there is any case of error - Rollback
             print(e.args)
-            # connection.rollback()
         finally:
             cursor.close()
             connection.close()
