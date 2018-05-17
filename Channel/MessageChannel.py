@@ -22,8 +22,7 @@ class MessageChannel:
             cursor.execute(self.content.getSpecifiedContent())
             startTimer = time.time()
             for competence_ID, competence, altLabels in cursor:
-                altLabel = altLabels.replace('/', '|') if altLabels else None
-                self.messagefilter.DBRegExp(competence_ID, competence, altLabel)
+                self.messagefilter.DBRegExp(competence_ID, competence, altLabels)
             elapsed = time.time() - startTimer
             duration = time.strftime('%H:%M:%S', time.gmtime(elapsed))
             print('Took: %s' % duration)
