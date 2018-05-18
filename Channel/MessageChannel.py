@@ -13,6 +13,8 @@ class MessageChannel:
 
     def fetchAndFilterDataFromDB(self, user, password, host, database, port):
         # connecting to Mysql server
+        global connection
+        global cursor
         try:
             connection = connect(user=user, password=password, host=host, database=database, port=port)
             print('Connecting to hostname: %s  with port: %s' % (connection.server_host, connection.server_port))
@@ -22,12 +24,12 @@ class MessageChannel:
             cursor.execute(self.content.getSpecifiedContent())
             startTimer = time.time()
             for competence_ID, competence, altLabels in cursor:
-                self.messagefilter.RetrieveDataDB(competence_ID, competence, altLabels)
+                self.messagefilter.retrieveDataFromDB(competence_ID, competence, altLabels)
             elapsed = time.time() - startTimer
             duration = time.strftime('%H:%M:%S', time.gmtime(elapsed))
             print('Took: %s' % duration)
         except Error as e:
-            print(e.args)
+            print(f'Problem occured {e.args} : ')
         except ProgrammingError as p:
             print(p.args)
         finally:

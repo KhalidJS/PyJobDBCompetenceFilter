@@ -15,15 +15,17 @@ class MessageFilter:
         self.database = AppConfiguration.Configuration.AppSettings.AppSettings.database.value
         self.port = AppConfiguration.Configuration.AppSettings.AppSettings.port.value
 
-    def retrieveDataDB(self, competence_id, competence, altLabel):
-        self.singlesearch(competence_id, competence)
+    def retrieveDataFromDB(self, competence_id, competence, altLabel):
+        self.singleSearch(competence_id=competence_id, searchstring=competence)
         if altLabel:
             labels = altLabel.split('/')
             for label in labels:
-                self.singlesearch(competence_id, label)
+                self.singleSearch(competence_id=competence_id, searchstring=label)
 
     def insertDataToDB(self, messageEndPoint):
         competenceID = messageEndPoint.getcompetenceID()
+        global connection
+        global cursor
         try:
             connection = connect(user=self.user, password=self.password,
                                  host=self.host,
@@ -42,13 +44,15 @@ class MessageFilter:
             connection.commit()
         except Error as e:
             # If there is any case of error - Rollback
-            print('Problem occured %s : ' % e.args)
+            print(f'Problem occured {e.args} : ')
             connection.rollback()
         finally:
             cursor.close()
             connection.close()
 
-    def singleSearchDB(self, competence_id, searchstring):
+    def singleSearch(self, competence_id, searchstring):
+        global connection
+        global cursor
         try:
             connection = connect(user=self.user, password=self.password,
                                  host=self.host,

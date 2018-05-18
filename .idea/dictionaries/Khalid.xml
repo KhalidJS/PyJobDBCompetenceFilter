@@ -3,6 +3,8 @@
     <words>
       <w>preflabel</w>
       <w>removespaces</w>
+      <w>searchstring</w>
+      <w>singlesearch</w>
     </words>
   </dictionary>
 </component>

@@ -15,12 +15,14 @@ class Application:
 
     # Just for test purpose
     def testConnectionToDB(self):
+        global connection
+        global cursor
         try:
             connection = connect(user=self.user, password=self.password, database=self.database, host=self.host, port=self.port)
             cursor = connection.cursor()
             print('successfully connected')
         except ProgrammingError as e:
-            print('An error has occurred', e.args)
+            print(f'Problem occured {e.args} : ')
         finally:
             cursor.close()
             connection.close()
