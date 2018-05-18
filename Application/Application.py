@@ -1,5 +1,5 @@
 from mysql.connector import connect, ProgrammingError
-from AppConfiguration.Configuration.AppSettings import AppSettings
+from AppConfiguration.AppSettings import AppSettings
 from Channel import MessageChannel
 
 

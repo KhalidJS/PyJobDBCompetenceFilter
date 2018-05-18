@@ -2,18 +2,18 @@ import sys
 import datetime
 from mysql.connector import connect, Error
 from Channel import MessageEndPoint
-import AppConfiguration.Configuration.AppSettings
+import AppConfiguration.AppSettings
 
 
 class MessageFilter:
 
     def __init__(self):
         self.messageEndpoint = MessageEndPoint.MessageEndPoint()
-        self.user = AppConfiguration.Configuration.AppSettings.AppSettings.user.value
-        self.password = AppConfiguration.Configuration.AppSettings.AppSettings.password.value
-        self.host = AppConfiguration.Configuration.AppSettings.AppSettings.host.value
-        self.database = AppConfiguration.Configuration.AppSettings.AppSettings.database.value
-        self.port = AppConfiguration.Configuration.AppSettings.AppSettings.port.value
+        self.user = AppConfiguration.AppSettings.AppSettings.user.value
+        self.password = AppConfiguration.AppSettings.AppSettings.password.value
+        self.host = AppConfiguration.AppSettings.AppSettings.host.value
+        self.database = AppConfiguration.AppSettings.AppSettings.database.value
+        self.port = AppConfiguration.AppSettings.AppSettings.port.value
 
     def retrieveDataFromDB(self, competence_id, competence, altLabel):
         self.singleSearch(competence_id=competence_id, searchstring=competence)
