@@ -29,7 +29,7 @@ class MessageChannel:
             duration = time.strftime('%H:%M:%S', time.gmtime(elapsed))
             print('Took: %s' % duration)
         except Error as e:
-            print(f'Problem occured {e.args} : ')
+            print('An error has occurred', e.args)
         except ProgrammingError as p:
             print(p.args)
         finally:
