@@ -22,7 +22,7 @@ class Application:
             cursor = connection.cursor()
             print('successfully connected')
         except ProgrammingError as e:
-            print(f'Problem occured {e.args} : ')
+            print('An error has occurred', e.args)
         finally:
             cursor.close()
             connection.close()
