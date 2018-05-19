@@ -59,7 +59,7 @@ class MessageFilter:
                                  database=self.database, port=self.port)
             cursor = connection.cursor()
             cursor.execute(
-                "SELECT _id,title,searchable_body,url from JobDB.annonce WHERE searchable_body like '%%%s%%';" % searchstring)
+                "SELECT _id,title,searchable_body,url from JobDB.annonce WHERE searchable_body REGEXP '[[:<:]]%s[[:>:]]';" % searchstring)
             self.messageEndpoint.setCompetenceID(competence_id)
             count = 0
             for _id, title, body, url in cursor:
