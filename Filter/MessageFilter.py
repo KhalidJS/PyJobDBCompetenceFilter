@@ -44,7 +44,7 @@ class MessageFilter:
             connection.commit()
         except Error as e:
             # If there is any case of error - Rollback
-            print(f'Problem occured {e.args} : ')
+            print('An error has occurred', e.args)
             connection.rollback()
         finally:
             cursor.close()
