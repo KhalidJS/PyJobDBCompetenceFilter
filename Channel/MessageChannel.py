@@ -1,5 +1,6 @@
 import datetime
 import time
+from AppConfiguration.AppSettings import AppSettings
 from mysql.connector import connect, ProgrammingError, Error
 from Filter import ContentFilter, MessageFilter
 
@@ -21,7 +22,10 @@ class MessageChannel:
             print('successfully connected to hostname: %s\n' % connection.server_host)
             print('Fetch for data and filter started: {%s}\n' % datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
             cursor = connection.cursor()
-            cursor.execute(self.content.getSpecifiedContent())
+            query = self.content.getSpecifiedContent()
+            if (AppSettings.kompetence.value):
+                query += (" AND k._id="+AppSettings.kompetence.value)
+            cursor.execute(query)
             startTimer = time.time()
             for competence_ID, competence, altLabels in cursor:
                 self.messagefilter.retrieveDataFromDB(competence_ID, competence, altLabels)

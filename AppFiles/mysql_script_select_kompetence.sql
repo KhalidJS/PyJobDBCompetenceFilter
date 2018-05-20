@@ -1,1 +1,1 @@
-select kompetence._id,kompetence.prefferredLabel,kompetence.altLabels from kompetence
+select k._id,k.prefferredLabel,k.altLabels from kompetence k where 1=1

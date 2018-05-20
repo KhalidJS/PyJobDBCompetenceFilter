@@ -2,25 +2,27 @@ import sys
 import datetime
 from mysql.connector import connect, Error
 from Channel import MessageEndPoint
-import AppConfiguration.AppSettings
+from AppConfiguration.AppSettings import AppSettings
 
 
 class MessageFilter:
 
     def __init__(self):
         self.messageEndpoint = MessageEndPoint.MessageEndPoint()
-        self.user = AppConfiguration.AppSettings.AppSettings.user.value
-        self.password = AppConfiguration.AppSettings.AppSettings.password.value
-        self.host = AppConfiguration.AppSettings.AppSettings.host.value
-        self.database = AppConfiguration.AppSettings.AppSettings.database.value
-        self.port = AppConfiguration.AppSettings.AppSettings.port.value
+        self.user = AppSettings.user.value
+        self.password = AppSettings.password.value
+        self.host = AppSettings.host.value
+        self.database = AppSettings.database.value
+        self.port = AppSettings.port.value
 
     def retrieveDataFromDB(self, competence_id, competence, altLabel):
-        self.singleSearch(competence_id=competence_id, searchstring=competence)
+        self.messageEndpoint.advertID = []
+        self.messageEndpoint.setCompetenceID(competence_id)
+        self.singleSearch(searchstring=competence)
         if altLabel:
             labels = altLabel.split('/')
             for label in labels:
-                self.singleSearch(competence_id=competence_id, searchstring=label)
+                self.singleSearch(searchstring=label)
 
     def insertDataToDB(self, messageEndPoint):
         competenceID = messageEndPoint.getcompetenceID()
@@ -50,7 +52,7 @@ class MessageFilter:
             cursor.close()
             connection.close()
 
-    def singleSearch(self, competence_id, searchstring):
+    def singleSearch(self, searchstring):
         global connection
         global cursor
         try:
@@ -58,15 +60,16 @@ class MessageFilter:
                                  host=self.host,
                                  database=self.database, port=self.port)
             cursor = connection.cursor()
-            cursor.execute(
-                "SELECT _id,title,searchable_body,url from JobDB.annonce WHERE searchable_body REGEXP '[[:<:]]%s[[:>:]]'" % searchstring)
-            self.messageEndpoint.setCompetenceID(competence_id)
+            query = "SELECT _id,title,searchable_body,url from JobDB.annonce a WHERE searchable_body REGEXP '[[:<:]]%s[[:>:]]'"
+            if (AppSettings.advert.value):
+                query += (" AND a._id="+AppSettings.advert.value)
+            cursor.execute(query % searchstring)
             count = 0
             for _id, title, body, url in cursor:
                 count += 1
                 self.messageEndpoint.addAdvertID(_id)
                 print("{%s} competence {%d} '%s' found at {%d}'%s' URL: %s" % (
-                    datetime.datetime.now().strftime("%H:%M:%S"), competence_id, searchstring, _id, title, url))
+                    datetime.datetime.now().strftime("%H:%M:%S"), self.messageEndpoint.getcompetenceID(), searchstring, _id, title, url))
             if count > 0:
                 self.insertDataToDB(self.messageEndpoint)
                 sys.stdout.flush()
