@@ -17,9 +17,8 @@ class MessageFilter:
 
     def retrieveDataFromDB(self, competence_id, competence, altLabel):
         self.singleSearch(competence_id=competence_id, searchstring=competence)
-        if altLabel:
-            labels = altLabel.split('/')
-            for label in labels:
+        if altLabel is not None:
+            for label in altLabel:
                 self.singleSearch(competence_id=competence_id, searchstring=label)
 
     def insertDataToDB(self, messageEndPoint):
@@ -59,7 +58,7 @@ class MessageFilter:
                                  database=self.database, port=self.port)
             cursor = connection.cursor()
             cursor.execute(
-        "SELECT _id,title,searchable_body,url from JobDB.annonce WHERE searchable_body like '%%%s%%';" % searchstring)
+                "SELECT _id,title,searchable_body,url from JobDB.annonce WHERE searchable_body like '%%%s%%';" % searchstring)
             self.messageEndpoint.setCompetenceID(competence_id)
             count = 0
             for _id, title, body, url in cursor:

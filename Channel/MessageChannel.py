@@ -24,7 +24,8 @@ class MessageChannel:
             cursor.execute(self.content.getSpecifiedContent())
             startTimer = time.time()
             for competence_ID, competence, altLabels in cursor:
-                self.messagefilter.retrieveDataFromDB(competence_ID, competence, altLabels)
+                altsplit = altLabels.split()
+                self.messagefilter.retrieveDataFromDB(competence_ID, competence, altsplit)
             elapsed = time.time() - startTimer
             duration = time.strftime('%H:%M:%S', time.gmtime(elapsed))
             print('Took: %s' % duration)
