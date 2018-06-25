@@ -8,3 +8,6 @@ class AppSettings(Enum):
     host = os.environ['MYSQL_HOST']
     database = os.environ['MYSQL_DATABASE']
     port = os.environ['MYSQL_PORT']
+    kompetence = os.getenv('COMPETENCE_ID', None)
+    advert = os.getenv('ADVERT_ID', None)
+

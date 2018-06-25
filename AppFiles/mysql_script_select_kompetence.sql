@@ -1,0 +1,1 @@
+select k._id,k.defaultSearchPatterns,k.overriddenSearchPatterns from kompetence k where 1=1 and ((select count(*) from annonce_kompetence)=0 OR k._id>(select max(ak.kompetence_id) from annonce_kompetence ak)) ORDER BY k._id ASC
