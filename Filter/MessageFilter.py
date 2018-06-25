@@ -15,14 +15,13 @@ class MessageFilter:
         self.database = AppSettings.database.value
         self.port = AppSettings.port.value
 
-    def retrieveDataFromDB(self, competence_id, competence, altLabel):
+    def retrieveDataFromDB(self, competence_id, searchPatterns):
         self.messageEndpoint.advertID = []
         self.messageEndpoint.setCompetenceID(competence_id)
-        self.singleSearch(searchstring=competence)
-        if altLabel:
-            labels = altLabel.split('/')
-            for label in labels:
-                self.singleSearch(searchstring=label)
+        if searchPatterns:
+            searchEntries = searchPatterns.split('/')
+            for searchEntry in searchEntries:
+                self.singleSearch(searchstring=searchEntry)
 
     def insertDataToDB(self, messageEndPoint):
         competenceID = messageEndPoint.getcompetenceID()
@@ -60,7 +59,7 @@ class MessageFilter:
                                  host=self.host,
                                  database=self.database, port=self.port)
             cursor = connection.cursor()
-            query = "SELECT _id,title,searchable_body,url from JobDB.annonce a WHERE searchable_body REGEXP '[[:<:]]%s[[:>:]]'"
+            query = "SELECT _id,title,searchable_body,url from JobDB.annonce a WHERE searchable_body REGEXP '%s'"
             if (AppSettings.advert.value):
                 query += (" AND a._id="+AppSettings.advert.value)
             cursor.execute(query % searchstring)

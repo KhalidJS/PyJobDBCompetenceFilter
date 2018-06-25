@@ -27,8 +27,11 @@ class MessageChannel:
                 query += (" AND k._id="+AppSettings.kompetence.value)
             cursor.execute(query)
             startTimer = time.time()
-            for competence_ID, competence, altLabels in cursor:
-                self.messagefilter.retrieveDataFromDB(competence_ID, competence, altLabels)
+            for competence_ID, defaultSearchPatterns, overriddenSearchPatterns in cursor:
+                if overriddenSearchPatterns is None or overriddenSearchPatterns is "":
+                    self.messagefilter.retrieveDataFromDB(competence_ID, defaultSearchPatterns)
+                else:
+                    self.messagefilter.retrieveDataFromDB(competence_ID, overriddenSearchPatterns)
             elapsed = time.time() - startTimer
             duration = time.strftime('%H:%M:%S', time.gmtime(elapsed))
             print('Took: %s' % duration)
